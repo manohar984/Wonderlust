@@ -982,7 +982,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <h3 class="font-serif text-2xl text-white group-hover:text-gold transition-colors duration-300">${dest.name}</h3>
           <p class="text-xs text-gold/80 font-medium tracking-wide uppercase italic">${dest.tagline}</p>
-          <p class="text-xs text-gray-400 font-light leading-relaxed line-clamp-2">${dest.description}</p>
+          // <p class="text-xs text-gray-400 font-light leading-relaxed line-clamp-2">${dest.description}</p>
           
           <div class="pt-3 flex items-center justify-between border-t border-gold/10">
             <span class="text-[9px] uppercase tracking-widest text-gray-500 font-bold">Open Planner</span>

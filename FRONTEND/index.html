@@ -95,7 +95,7 @@
         <button id="soundscapes-toggle"
           class="flex items-center gap-2 border border-gold/20 hover:border-gold/50 px-4 py-2 rounded-full text-[10px] uppercase tracking-widest text-gold bg-emerald/20 transition-all">
           <span class="w-1.5 h-1.5 rounded-full bg-gold animate-ping"></span>
-          <span>Ambient </span>
+          <span>Ambient Music</span>
           <!-- Equalizer waves -->
           <div id="equalizer-container" class="flex gap-[2px] items-end h-3 w-4">
             <span class="equalizer-bar" style="animation-delay: 0.1s;"></span>
@@ -107,6 +107,11 @@
         <!-- Mock Audio Source -->
         <audio id="ambient-audio" loop
           src="https://assets.mixkit.co/music/preview/mixkit-zen-meditation-waterfall-nature-sounds-583.mp3"></audio>
+
+                <div id="auth-nav-container" class="hidden sm:inline-block mr-2">
+          <button id="btn-login-trigger"
+            class="border border-gold/30 hover:border-gold text-gold px-5 py-2 rounded-full text-[10px] uppercase tracking-wider font-bold transition-all bg-emerald/20">Login</button>
+        </div>
 
         <a href="#destinations-section"
           class="btn-gold hidden sm:inline-block px-5 py-2 rounded-full text-[10px] uppercase tracking-wider font-bold">Plan
@@ -130,7 +135,7 @@
         <span class="text-gold font-normal italic">Journey Awaits</span>
       </h1>
       <p class="text-sm md:text-base text-gray-400 font-light max-w-xl mx-auto leading-relaxed">
-        Choose your next  location below, or slide the budget tool to find perfect trips matching your budget.
+        Choose your next dream location below, or slide the budget tool to find perfect trips matching your budget.
       </p>
     </div>
 
@@ -1013,6 +1018,44 @@
       </div>
     </div>
   </footer>
+
+  <!-- JWT Auth Modal Overlay -->
+  <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/70 backdrop-blur-md">
+    <div class="glass-panel w-full max-w-sm p-8 rounded-2xl border border-gold/25 relative mx-4 space-y-6">
+      <button id="auth-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">✕</button>
+      
+      <div class="text-center space-y-1">
+        <h3 id="auth-modal-title" class="font-serif text-2xl text-gold">Login to Wanderlust</h3>
+        <p id="auth-modal-desc" class="text-xs text-gray-400">Enter your credentials to plan and save your trips.</p>
+      </div>
+
+      <form id="auth-form" class="space-y-4">
+        <!-- Username Field (Visible only during Registration) -->
+        <div id="username-field-container" class="space-y-1 hidden">
+          <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block mb-1">Choose Username</label>
+          <input type="text" id="auth-username" placeholder="username" class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+        </div>
+        
+        <!-- Email/Username Field -->
+        <div class="space-y-1">
+          <label id="email-label" class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block block mb-1">Username or Email</label>
+          <input type="text" id="auth-email-username" placeholder="username or email" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+        </div>
+
+        <!-- Password Field -->
+        <div class="space-y-1">
+          <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block mb-1">Password</label>
+          <input type="password" id="auth-password" placeholder="••••••••" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+        </div>
+
+        <button type="submit" id="auth-submit-btn" class="w-full btn-gold py-3 rounded-lg text-xs uppercase tracking-widest font-bold mt-2">Login</button>
+      </form>
+
+      <div class="text-center">
+        <button id="auth-toggle-btn" class="text-xs text-gold hover:underline">Don't have an account? Register</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Script Connection -->
   <script src="assets/js/main.js"></script>

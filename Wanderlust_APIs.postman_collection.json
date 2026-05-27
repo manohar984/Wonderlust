@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "8bfa2e9a-7a54-4fbd-8e93-01869e5d4cb0",
+		"name": "Wanderlust Chronicles APIs",
+		"description": "API collection for testing Wanderlust Chronicles backend endpoints. Includes fetching destinations, registration, login, and saving generated travel tickets to MongoDB.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"raju123\",\n    \"email\": \"raju@example.com\",\n    \"password\": \"SecurePass123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				},
+				"description": "Registers a new user account on the Wanderlust platform."
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"usernameOrEmail\": \"raju123\",\n    \"password\": \"SecurePass123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				},
+				"description": "Logs in the user and returns a signed JWT token."
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Destinations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/destinations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"destinations"
+					]
+				},
+				"description": "Fetches all travel destinations from MongoDB. If MongoDB is offline, it will automatically fall back to serving local hardcoded travel data."
+			},
+			"response": []
+		},
+		{
+			"name": "Create Travel Ticket",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text",
+						"description": "Set to your JWT token value from /api/auth/login"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"ticketNumber\": \"WND-123456\",\n    \"name\": \"Raju Tester\",\n    \"email\": \"raju@example.com\",\n    \"destinationId\": \"taj_mahal\",\n    \"destinationName\": \"Taj Mahal, Agra\",\n    \"durationDays\": 5,\n    \"totalTravelers\": 2,\n    \"serviceLevel\": \"premium\",\n    \"estimatedBudget\": 52500,\n    \"dateGenerated\": \"May 27, 2026\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/tickets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"tickets"
+					]
+				},
+				"description": "Submits a new travel ticket/boarding pass payload to be saved in the MongoDB database. This requires a Bearer JWT Token in the Authorization header."
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Saved Tickets",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text",
+						"description": "Set to your JWT token value from /api/auth/login"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/tickets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"tickets"
+					]
+				},
+				"description": "Fetches all generated travel tickets saved in the MongoDB database, sorted by creation date. This requires a Bearer JWT Token in the Authorization header."
+			},
+			"response": []
+		}
+	]
+}

@@ -990,7 +990,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <h3 class="font-serif text-2xl text-white group-hover:text-gold transition-colors duration-300">${dest.name}</h3>
           <p class="text-xs text-gold/80 font-medium tracking-wide uppercase italic">${dest.tagline}</p>
-          // <p class="text-xs text-gray-400 font-light leading-relaxed line-clamp-2">${dest.description}</p>
+          <p class="text-xs text-gray-400 font-light leading-relaxed line-clamp-2">${dest.description}</p>
           
           <div class="pt-3 flex items-center justify-between border-t border-gold/10">
             <span class="text-[9px] uppercase tracking-widest text-gray-500 font-bold">Open Planner</span>
@@ -1366,6 +1366,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const authPassword = document.getElementById('auth-password');
   const authSubmitBtn = document.getElementById('auth-submit-btn');
   const authNavContainer = document.getElementById('auth-nav-container');
+  const footerAuthContainer = document.getElementById('footer-auth-container');
   const emailLabel = document.getElementById('email-label');
 
   let isRegisterMode = false;
@@ -1376,13 +1377,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userToken && username) {
       if (authNavContainer) {
         authNavContainer.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="text-[9px] uppercase tracking-wider text-gold font-bold">Welcome, ${username}</span>
-            <button id="btn-logout" class="border border-red-500/30 hover:border-red-500 text-red-400 px-3 py-1.5 rounded-full text-[9px] uppercase tracking-wider font-bold transition-all bg-red-950/20">Logout</button>
-          </div>
+          <span class="text-[10px] uppercase tracking-wider text-gold font-bold">Welcome, ${username}</span>
         `;
-        const btnLogout = document.getElementById('btn-logout');
-        if (btnLogout) btnLogout.addEventListener('click', handleLogout);
+      }
+      if (footerAuthContainer) {
+        footerAuthContainer.innerHTML = `
+          <button id="btn-footer-logout" class="text-red-400 hover:text-red-500 font-bold uppercase tracking-widest transition-colors">Logout</button>
+        `;
+        const btnFooterLogout = document.getElementById('btn-footer-logout');
+        if (btnFooterLogout) btnFooterLogout.addEventListener('click', handleLogout);
       }
     } else {
       if (authNavContainer) {
@@ -1391,6 +1394,13 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         const btnLoginTrigger = document.getElementById('btn-login-trigger');
         if (btnLoginTrigger) btnLoginTrigger.addEventListener('click', openAuthModal);
+      }
+      if (footerAuthContainer) {
+        footerAuthContainer.innerHTML = `
+          <button id="btn-footer-login" class="hover:text-gold transition-colors font-bold uppercase tracking-widest">Login</button>
+        `;
+        const btnFooterLogin = document.getElementById('btn-footer-login');
+        if (btnFooterLogin) btnFooterLogin.addEventListener('click', openAuthModal);
       }
     }
   }

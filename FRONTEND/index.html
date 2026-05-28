@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Wonderlust Chronicles - Premium Luxury Travel Planner. Custom day-by-day itineraries, dynamic budget calculators, interactive style matches, and digital travel tickets.">
+    content="Wanderlust Chronicles - Premium Luxury Travel Planner. Custom day-by-day itineraries, dynamic budget calculators, interactive style matches, and digital travel tickets.">
   <title>Wanderlust Chronicles | Premium Travel Planner</title>
 
   <!-- Tailwind CSS Play CDN -->
@@ -30,7 +30,7 @@
           },
           fontFamily: {
             serif: ['"Outfit"', 'sans-serif'],
-            
+            sans: ['"Inter"', 'sans-serif'],
           }
         }
       }
@@ -59,12 +59,12 @@
     class="fixed top-0 left-0 w-full z-40 transition-all duration-300 bg-emerald-dark/75 backdrop-blur-xl border-b border-gold/10">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
       <a href="#" class="font-serif text-2xl tracking-wider text-gold flex items-center gap-2">
-        <span class="text-xl font-light">✦</span> Wonderlust <span
+        <span class="text-xl font-light">✦</span> Wanderlust <span
           class="text-sm font-sans uppercase tracking-[0.25em] font-light text-gray-400">Chronicles</span>
       </a>
 
       <!-- Nav Links -->
-      <nav class="hidden lg:flex items-center gap-8">
+      <nav class="hidden xl:flex items-center gap-10">
         <a href="#" class="text-xs uppercase tracking-widest text-gray-300 hover:text-white nav-underline ml-8">Home</a>
         <a href="#spotlight-section"
           class="text-xs uppercase tracking-widest text-gray-300 hover:text-white nav-underline">Featured Trip</a>
@@ -80,8 +80,8 @@
           class="text-xs uppercase tracking-widest text-gray-300 hover:text-white nav-underline mr-8">Reviews</a>
       </nav>
 
-      <!-- Interactive Widgets (Theme Selector + Ambient Music) -->
-      <div class="flex items-center gap-3">
+      <!-- Interactive Widgets (Theme Selector + Login & Plan Trip) -->
+      <div class="flex items-center gap-4">
         <!-- Theme Dropdown Select -->
         <div class="relative">
           <select id="theme-select"
@@ -92,30 +92,10 @@
           </select>
         </div>
 
-        <button id="soundscapes-toggle"
-          class="flex items-center gap-2 border border-gold/20 hover:border-gold/50 px-4 py-2 rounded-full text-[10px] uppercase tracking-widest text-gold bg-emerald/20 transition-all">
-          <span class="w-1.5 h-1.5 rounded-full bg-gold animate-ping"></span>
-          <span>Ambient Music</span>
-          <!-- Equalizer waves -->
-          <div id="equalizer-container" class="flex gap-[2px] items-end h-3 w-4">
-            <span class="equalizer-bar" style="animation-delay: 0.1s;"></span>
-            <span class="equalizer-bar" style="animation-delay: 0.3s;"></span>
-            <span class="equalizer-bar" style="animation-delay: 0.2s;"></span>
-            <span class="equalizer-bar" style="animation-delay: 0.4s;"></span>
-          </div>
-        </button>
-        <!-- Mock Audio Source -->
-        <audio id="ambient-audio" loop
-          src="https://assets.mixkit.co/music/preview/mixkit-zen-meditation-waterfall-nature-sounds-583.mp3"></audio>
-
-                <div id="auth-nav-container" class="hidden sm:inline-block mr-2">
+        <div id="auth-nav-container" class="inline-block ml-2">
           <button id="btn-login-trigger"
             class="border border-gold/30 hover:border-gold text-gold px-5 py-2 rounded-full text-[10px] uppercase tracking-wider font-bold transition-all bg-emerald/20">Login</button>
         </div>
-
-        <a href="#destinations-section"
-          class="btn-gold hidden sm:inline-block px-5 py-2 rounded-full text-[10px] uppercase tracking-wider font-bold">Plan
-          Trip</a>
       </div>
     </div>
   </header>
@@ -1005,10 +985,11 @@
         <a href="#" class="font-serif text-2xl tracking-wider text-gold flex items-center gap-2">
           ✦ Wanderlust Chronicles
         </a>
-        <div class="flex gap-8 text-xs uppercase tracking-widest text-gray-500">
+        <div class="flex items-center gap-6 sm:gap-8 text-xs uppercase tracking-widest text-gray-500">
           <a href="#" class="hover:text-gold transition-colors">Home</a>
           <a href="#destinations-section" class="hover:text-gold transition-colors">Destinations</a>
           <a href="#testimonials-section" class="hover:text-gold transition-colors">Reviews</a>
+          <div id="footer-auth-container" class="inline-block border-l border-gold/20 pl-6 sm:pl-8"></div>
         </div>
       </div>
       <div

@@ -990,7 +990,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           <h3 class="font-serif text-2xl text-white group-hover:text-gold transition-colors duration-300">${dest.name}</h3>
           <p class="text-xs text-gold/80 font-medium tracking-wide uppercase italic">${dest.tagline}</p>
-          // <p class="text-xs text-gray-400 font-light leading-relaxed line-clamp-2">${dest.description}</p>
+          <p class="text-xs text-gray-400 font-light leading-relaxed line-clamp-2">${dest.description}</p>
           
           <div class="pt-3 flex items-center justify-between border-t border-gold/10">
             <span class="text-[9px] uppercase tracking-widest text-gray-500 font-bold">Open Planner</span>
@@ -1376,9 +1376,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (userToken && username) {
       if (authNavContainer) {
         authNavContainer.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="text-[9px] uppercase tracking-wider text-gold font-bold">Welcome, ${username}</span>
-            <button id="btn-logout" class="border border-red-500/30 hover:border-red-500 text-red-400 px-3 py-1.5 rounded-full text-[9px] uppercase tracking-wider font-bold transition-all bg-red-950/20">Logout</button>
+          <div class="flex items-center gap-3 whitespace-nowrap">
+            <span class="text-[10px] uppercase tracking-wider text-gold font-bold">Welcome, ${username}</span>
+            <button id="btn-logout" class="border border-red-500/30 hover:border-red-500 text-red-400 px-4 py-2 rounded-full text-[10px] uppercase tracking-wider font-bold transition-all bg-red-950/20">Logout</button>
           </div>
         `;
         const btnLogout = document.getElementById('btn-logout');

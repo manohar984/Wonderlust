@@ -9,7 +9,7 @@ exports.getAllDestinations = async (req, res) => {
     console.log('MongoDB not connected. Serving in-memory fallback data.');
     return res.json({
       source: 'local_fallback',
-      data: destinationsData
+      // data: data
     });
   }
 

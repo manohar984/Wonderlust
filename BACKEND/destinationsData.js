@@ -8,7 +8,7 @@ const destinationsData = [
     image: "assets/images/india_taj_mahal.png",
     tagline: "The Golden Symbol of Love",
     description: "Visit the beautiful white marble monument built on the banks of the Yamuna River. A timeless wonder of world history and majestic architecture.",
-    minBudget: 22000,
+    // minBudget: 22000,
     baseCosts: { standard: 3000, premium: 7500, luxury: 20000 },
     activityCosts: { standard: 1200, premium: 3000, luxury: 8000 },
     attractions: ["Taj Mahal Sunrise Tour", "Agra Fort Heritage Walk", "Fatehpur Sikri Excursion", "Mehtab Bagh Sunset Views"],

@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // Attach user payload to request object
+    req.user = doded; // Attach user payload to request object
     next();
   } catch (err) {
     console.error('JWT Verification Error:', err.message);

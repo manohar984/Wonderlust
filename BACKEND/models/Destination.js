@@ -15,7 +15,7 @@ const DestinationSchema = new mongoose.Schema({
     luxury: Number
   },
   activityCosts: {
-    standard: Number,
+    // standard: Number,
     premium: Number,
     luxury: Number
   },

@@ -27,7 +27,7 @@ let isMongoConnected = false;
 mongoose.connect(MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB successfully at ' + MONGODB_URI);
-    isMongoConnected = true;
+    // isMongoConnected = true;
     seedDatabase();
   })
   .catch(err => {

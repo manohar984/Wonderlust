@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wanderlust Chronicles - Premium Admin Portal. Manage destinations, tickets, and user accounts.">
+  <title>Wanderlust Chronicles | Admin Dashboard</title>
+
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Config Customization (Mapping colors to CSS variables for dynamic themes) -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              DEFAULT: 'var(--color-emerald)',
+              light: 'var(--color-emerald-light)',
+              dark: 'var(--bg-primary)',
+            },
+            gold: {
+              DEFAULT: 'var(--color-gold)',
+              light: 'var(--color-gold-hover)',
+              dark: 'var(--color-gold-hover)',
+            }
+          },
+          fontFamily: {
+            serif: ['"Outfit"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles Link -->
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <style>
+    /* Specific classes for admin interface */
+    .admin-sidebar-item.active {
+      background: rgba(220, 197, 162, 0.15);
+      border-left: 3px solid var(--color-gold);
+      color: #fff;
+    }
+    .modal-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .modal-scroll::-webkit-scrollbar-thumb {
+      background: var(--color-gold);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body class="bg-emerald-dark text-[#f8f6f0] antialiased selection:bg-gold selection:text-emerald-dark">
+
+  <!-- Ambient Glow Effects -->
+  <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-emerald-light/10 blur-[130px] glow-blob"></div>
+    <div class="absolute top-[35%] -right-[15%] w-[45vw] h-[45vw] rounded-full bg-gold/5 blur-[130px] glow-blob" style="animation-delay: -3s;"></div>
+  </div>
+
+  <!-- Main Grid Wrapper -->
+  <div class="min-h-screen flex flex-col relative z-10">
+    
+    <!-- Top Header Navigation -->
+    <header class="bg-emerald-dark/75 backdrop-blur-xl border-b border-gold/10 h-20 flex items-center justify-between px-6 sticky top-0 z-30">
+      <div class="flex items-center gap-4">
+        <a href="#" class="font-serif text-2xl tracking-wider text-gold flex items-center gap-2">
+          <span class="text-xl font-light">✦</span> Wanderlust <span class="text-sm font-sans uppercase tracking-[0.25em] font-light text-gray-400">Admin</span>
+        </a>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="border border-gold/20 hover:border-gold/60 text-xs text-gray-300 hover:text-white px-4 py-2 rounded-full transition-all uppercase tracking-wider font-semibold">
+          ← View Main Site
+        </a>
+        <button id="btn-admin-logout" class="bg-red-950/40 border border-red-500/30 hover:border-red-500 text-red-400 px-4 py-2 rounded-full text-xs uppercase tracking-wider font-semibold transition-all">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar & Content Wrapper -->
+    <div class="flex-1 flex flex-col md:flex-row">
+      
+      <!-- Sidebar Panel (Col 3) -->
+      <aside class="w-full md:w-64 bg-[#020706]/60 backdrop-blur border-b md:border-b-0 md:border-r border-gold/10 p-6 flex flex-col gap-6">
+        <div class="space-y-1">
+          <h4 class="text-[9px] uppercase tracking-[0.2em] text-gray-500 font-bold">Navigation</h4>
+          <p class="text-xs text-gold">Control Panel Control</p>
+        </div>
+
+        <nav class="flex flex-col gap-2">
+          <button id="nav-dashboard" class="admin-sidebar-item active flex items-center gap-3 px-4 py-3 rounded-lg text-left text-xs uppercase tracking-wider text-gray-400 hover:text-white transition-all">
+            <span>📊</span> Dashboard Overview
+          </button>
+          <button id="nav-destinations" class="admin-sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-left text-xs uppercase tracking-wider text-gray-400 hover:text-white transition-all">
+            <span>🗺️</span> Manage Destinations
+          </button>
+          <button id="nav-tickets" class="admin-sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-left text-xs uppercase tracking-wider text-gray-400 hover:text-white transition-all">
+            <span>🎫</span> Booked Tickets
+          </button>
+          <button id="nav-users" class="admin-sidebar-item flex items-center gap-3 px-4 py-3 rounded-lg text-left text-xs uppercase tracking-wider text-gray-400 hover:text-white transition-all">
+            <span>👥</span> Registered Users
+          </button>
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-gold/10 hidden md:block">
+          <span class="text-[9px] text-gray-600 uppercase tracking-widest block">Logged in as:</span>
+          <span id="admin-username-display" class="text-xs text-white font-bold block mt-1">Admin</span>
+        </div>
+      </aside>
+
+      <!-- Main Dynamic Content Panel (Col 9) -->
+      <main class="flex-1 p-6 md:p-8 space-y-8 overflow-x-hidden">
+        
+        <!-- SECTION 1: DASHBOARD VIEW -->
+        <section id="section-dashboard" class="admin-section space-y-8">
+          <div class="flex justify-between items-center border-b border-gold/10 pb-4">
+            <div>
+              <span class="text-xs uppercase tracking-widest text-gold font-bold">Overview</span>
+              <h2 class="font-serif text-3xl font-light text-white mt-1">Admin Dashboard</h2>
+            </div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Stat 1 -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-gold relative overflow-hidden group">
+              <div class="absolute -right-4 -bottom-4 text-6xl opacity-10 group-hover:scale-110 transition-transform">🗺️</div>
+              <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold block">Total Destinations</span>
+              <span id="stat-destinations" class="text-3xl font-serif text-white font-bold block mt-2">Loading...</span>
+              <p class="text-[9px] text-gold mt-2 uppercase tracking-wide">Catalog items</p>
+            </div>
+
+            <!-- Stat 2 -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-gold relative overflow-hidden group">
+              <div class="absolute -right-4 -bottom-4 text-6xl opacity-10 group-hover:scale-110 transition-transform">🎫</div>
+              <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold block">Booked Tickets</span>
+              <span id="stat-tickets" class="text-3xl font-serif text-white font-bold block mt-2">Loading...</span>
+              <p class="text-[9px] text-gold mt-2 uppercase tracking-wide">Total boarding passes</p>
+            </div>
+
+            <!-- Stat 3 -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-gold relative overflow-hidden group">
+              <div class="absolute -right-4 -bottom-4 text-6xl opacity-10 group-hover:scale-110 transition-transform">💰</div>
+              <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold block">Estimated Revenue</span>
+              <span id="stat-revenue" class="text-2xl font-serif text-white font-bold block mt-2">Loading...</span>
+              <p class="text-[9px] text-gold mt-3 uppercase tracking-wide">Cumulative budget</p>
+            </div>
+
+            <!-- Stat 4 -->
+            <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-gold relative overflow-hidden group">
+              <div class="absolute -right-4 -bottom-4 text-6xl opacity-10 group-hover:scale-110 transition-transform">👥</div>
+              <span class="text-[10px] uppercase tracking-widest text-gray-400 font-bold block">Registered Users</span>
+              <span id="stat-users" class="text-3xl font-serif text-white font-bold block mt-2">Loading...</span>
+              <p class="text-[9px] text-gold mt-2 uppercase tracking-wide">User profiles</p>
+            </div>
+
+          </div>
+
+          <!-- Recent Bookings Table Preview -->
+          <div class="glass-panel rounded-2xl p-6 border border-gold/15 space-y-4">
+            <h3 class="font-serif text-xl text-white">Recent Booking Registrations</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-gold/15 text-gold uppercase tracking-wider">
+                    <th class="pb-3 font-semibold">Ticket No</th>
+                    <th class="pb-3 font-semibold">Customer</th>
+                    <th class="pb-3 font-semibold">Destination</th>
+                    <th class="pb-3 font-semibold text-right">Est. Budget</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-bookings-list" class="divide-y divide-gold/5 text-gray-300">
+                  <tr>
+                    <td colspan="4" class="py-4 text-center text-gray-500 font-light">Loading statistics data...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: MANAGE DESTINATIONS VIEW -->
+        <section id="section-destinations" class="admin-section space-y-8 hidden">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gold/10 pb-4">
+            <div>
+              <span class="text-xs uppercase tracking-widest text-gold font-bold">Database</span>
+              <h2 class="font-serif text-3xl font-light text-white mt-1">Manage Destinations</h2>
+            </div>
+            <button id="btn-add-dest-trigger" class="btn-gold px-5 py-2.5 rounded-full text-xs uppercase tracking-widest font-bold">
+              + Add New Destination
+            </button>
+          </div>
+
+          <!-- Destinations List table -->
+          <div class="glass-panel rounded-2xl p-6 border border-gold/15 space-y-4">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-gold/15 text-gold uppercase tracking-wider">
+                    <th class="pb-3 font-semibold">Image</th>
+                    <th class="pb-3 font-semibold">Name</th>
+                    <th class="pb-3 font-semibold">Category</th>
+                    <th class="pb-3 font-semibold">Min Budget</th>
+                    <th class="pb-3 font-semibold text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-destinations-list" class="divide-y divide-gold/5 text-gray-300">
+                  <tr>
+                    <td colspan="5" class="py-4 text-center text-gray-500 font-light">Loading destinations catalog...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: BOOKED TICKETS VIEW -->
+        <section id="section-tickets" class="admin-section space-y-8 hidden">
+          <div class="flex justify-between items-center border-b border-gold/10 pb-4">
+            <div>
+              <span class="text-xs uppercase tracking-widest text-gold font-bold">Bookings</span>
+              <h2 class="font-serif text-3xl font-light text-white mt-1">Booked Boarding Passes</h2>
+            </div>
+          </div>
+
+          <!-- Tickets Table -->
+          <div class="glass-panel rounded-2xl p-6 border border-gold/15 space-y-4">
+            <div class="flex items-center bg-black/40 border border-gold/20 rounded-lg px-3 py-2 w-full max-w-sm">
+              <span class="text-gray-500 mr-2">🔍</span>
+              <input type="text" id="search-tickets" placeholder="Search passenger name, email, or destination..." class="bg-transparent border-none text-xs text-white placeholder-gray-500 w-full focus:outline-none">
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-gold/15 text-gold uppercase tracking-wider">
+                    <th class="pb-3 font-semibold">Ticket No</th>
+                    <th class="pb-3 font-semibold">Name</th>
+                    <th class="pb-3 font-semibold">Email</th>
+                    <th class="pb-3 font-semibold">Destination</th>
+                    <th class="pb-3 font-semibold">Duration/Guests</th>
+                    <th class="pb-3 font-semibold">Service Level</th>
+                    <th class="pb-3 font-semibold text-right">Budget</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-tickets-list" class="divide-y divide-gold/5 text-gray-300">
+                  <tr>
+                    <td colspan="7" class="py-4 text-center text-gray-500 font-light">Loading booked tickets list...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: REGISTERED USERS VIEW -->
+        <section id="section-users" class="admin-section space-y-8 hidden">
+          <div class="flex justify-between items-center border-b border-gold/10 pb-4">
+            <div>
+              <span class="text-xs uppercase tracking-widest text-gold font-bold">Access Control</span>
+              <h2 class="font-serif text-3xl font-light text-white mt-1">Registered Users</h2>
+            </div>
+          </div>
+
+          <!-- Users Table -->
+          <div class="glass-panel rounded-2xl p-6 border border-gold/15 space-y-4">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-gold/15 text-gold uppercase tracking-wider">
+                    <th class="pb-3 font-semibold">Username</th>
+                    <th class="pb-3 font-semibold">Email Address</th>
+                    <th class="pb-3 font-semibold">Role</th>
+                    <th class="pb-3 font-semibold">Date Registered</th>
+                    <th class="pb-3 font-semibold text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-list" class="divide-y divide-gold/5 text-gray-300">
+                  <tr>
+                    <td colspan="5" class="py-4 text-center text-gray-500 font-light">Loading users database...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative py-8 border-t border-gold/10 bg-[#020706] text-center text-[11px] uppercase tracking-widest text-gray-600">
+      <p>&copy; 2026 Wanderlust Chronicles. Secured Admin Panel.</p>
+    </footer>
+
+  </div>
+
+  <!-- ADD / EDIT DESTINATION MODAL OVERLAY -->
+  <div id="dest-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black/75 backdrop-blur-sm">
+    <div class="glass-panel w-full max-w-2xl p-6 md:p-8 rounded-2xl border border-gold/25 relative mx-4 space-y-6 max-h-[90vh] flex flex-col justify-between">
+      <button id="dest-modal-close" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">✕</button>
+      
+      <div class="text-center space-y-1">
+        <h3 id="dest-modal-title" class="font-serif text-2xl text-gold">Add Destination</h3>
+        <p class="text-xs text-gray-400">Save a new luxury travel itinerary details to database.</p>
+      </div>
+
+      <!-- Scrollable Form Container -->
+      <form id="dest-form" class="space-y-4 overflow-y-auto modal-scroll pr-2 flex-1">
+        <input type="hidden" id="dest-mongo-id">
+
+        <!-- Part A: Basic Data -->
+        <h4 class="text-[10px] uppercase tracking-widest text-gold border-b border-gold/10 pb-1 font-bold">1. General Information</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Unique ID (URL tag)</label>
+            <input type="text" id="dest-id" placeholder="e.g. hyderabad_charminar" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Destination Name</label>
+            <input type="text" id="dest-name" placeholder="e.g. Charminar, Hyderabad" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Category</label>
+            <select id="dest-category" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white focus:outline-none focus:border-gold cursor-pointer">
+              <option value="india">India Trails</option>
+              <option value="world">World Trails</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Tagline</label>
+            <input type="text" id="dest-tagline" placeholder="e.g. The City of Pearls & Nizams" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Image File Path / URL</label>
+            <input type="text" id="dest-image" placeholder="e.g. assets/images/india_jaipur.png" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Tags (comma separated)</label>
+            <input type="text" id="dest-tags" placeholder="e.g. heritage, nature, adventure" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Short Description</label>
+          <textarea id="dest-description" placeholder="Provide a premium descriptive paragraph detailing the destination's appeal..." required rows="2" class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold resize-none"></textarea>
+        </div>
+
+        <!-- Part B: Costs -->
+        <h4 class="text-[10px] uppercase tracking-widest text-gold border-b border-gold/10 pb-1 pt-2 font-bold">2. Pricing Parameters (Daily INR)</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2 border border-gold/10 p-3 rounded-lg bg-black/20">
+            <span class="text-[10px] text-white block uppercase tracking-wider">Accommodation Base Costs</span>
+            <div class="grid grid-cols-3 gap-2">
+              <input type="number" id="cost-stay-std" placeholder="Std" required class="px-2 py-1.5 bg-black/40 border border-gold/20 rounded text-xs text-white focus:outline-none focus:border-gold">
+              <input type="number" id="cost-stay-prem" placeholder="Prem" required class="px-2 py-1.5 bg-black/40 border border-gold/20 rounded text-xs text-white focus:outline-none focus:border-gold">
+              <input type="number" id="cost-stay-lux" placeholder="Lux" required class="px-2 py-1.5 bg-black/40 border border-gold/20 rounded text-xs text-white focus:outline-none focus:border-gold">
+            </div>
+          </div>
+          <div class="space-y-2 border border-gold/10 p-3 rounded-lg bg-black/20">
+            <span class="text-[10px] text-white block uppercase tracking-wider">Activity/Guides costs</span>
+            <div class="grid grid-cols-3 gap-2">
+              <input type="number" id="cost-act-std" placeholder="Std" required class="px-2 py-1.5 bg-black/40 border border-gold/20 rounded text-xs text-white focus:outline-none focus:border-gold">
+              <input type="number" id="cost-act-prem" placeholder="Prem" required class="px-2 py-1.5 bg-black/40 border border-gold/20 rounded text-xs text-white focus:outline-none focus:border-gold">
+              <input type="number" id="cost-act-lux" placeholder="Lux" required class="px-2 py-1.5 bg-black/40 border border-gold/20 rounded text-xs text-white focus:outline-none focus:border-gold">
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Minimum Budget limit (INR)</label>
+            <input type="number" id="dest-minbudget" placeholder="e.g. 15000" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+          </div>
+          <div class="space-y-1">
+            <label class="text-[9px] uppercase tracking-wider text-gray-400 font-bold block">Must-Visit Attractions (comma separated)</label>
+            <input type="text" id="dest-attractions" placeholder="e.g. Charminar, Golconda Fort, Birla Mandir" required class="w-full px-4 py-2.5 bg-black/40 border border-gold/20 rounded-lg text-xs text-white placeholder-gray-500 focus:outline-none focus:border-gold">
+          </div>
+        </div>
+
+        <!-- Part C: Itinerary -->
+        <h4 class="text-[10px] uppercase tracking-widest text-gold border-b border-gold/10 pb-1 pt-2 font-bold">3. Itinerary Highlights (Day by Day)</h4>
+        <div class="space-y-2">
+          <span class="text-[10px] text-gray-400 block font-light">Input day details (Minimum 3 days, maximum 5 days shown in preview).</span>
+          <div class="grid grid-cols-1 gap-2">
+            <input type="text" id="itinerary-day-1" placeholder="Day 1 program description" required class="w-full px-4 py-2 bg-black/40 border border-gold/20 rounded-lg text-xs text-white focus:outline-none focus:border-gold">
+            <input type="text" id="itinerary-day-2" placeholder="Day 2 program description" required class="w-full px-4 py-2 bg-black/40 border border-gold/20 rounded-lg text-xs text-white focus:outline-none focus:border-gold">
+            <input type="text" id="itinerary-day-3" placeholder="Day 3 program description" required class="w-full px-4 py-2 bg-black/40 border border-gold/20 rounded-lg text-xs text-white focus:outline-none focus:border-gold">
+            <input type="text" id="itinerary-day-4" placeholder="Day 4 program description (Optional)" class="w-full px-4 py-2 bg-black/40 border border-gold/20 rounded-lg text-xs text-white focus:outline-none focus:border-gold">
+            <input type="text" id="itinerary-day-5" placeholder="Day 5 program description (Optional)" class="w-full px-4 py-2 bg-black/40 border border-gold/20 rounded-lg text-xs text-white focus:outline-none focus:border-gold">
+          </div>
+        </div>
+
+        <button type="submit" id="btn-dest-submit" class="w-full btn-gold py-3 rounded-lg text-xs uppercase tracking-widest font-bold mt-4">Save Destination</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin logic Connection -->
+  <script src="assets/js/admin.js"></script>
+</body>
+
+</html>

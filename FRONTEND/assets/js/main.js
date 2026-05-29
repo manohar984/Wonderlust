@@ -732,6 +732,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ticketForm) {
       ticketForm.addEventListener('submit', handleTicketGeneration);
     }
+
+    // Auth bindings
+    updateAuthUI();
+    if (authCloseBtn) authCloseBtn.addEventListener('click', closeAuthModal);
+    if (authToggleBtn) authToggleBtn.addEventListener('click', toggleAuthMode);
+    if (authForm) authForm.addEventListener('submit', handleAuthSubmit);
   }
 
   /* ==========================================================================
@@ -1172,10 +1178,17 @@ document.addEventListener('DOMContentLoaded', () => {
       dateGenerated: currentDate
     };
 
+    if (!userToken) {
+      showToast("Please login first to generate and save tickets.", "error");
+      openAuthModal();
+      return;
+    }
+
     fetch('/api/tickets', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`
       },
       body: JSON.stringify(ticketPayload)
     })
@@ -1338,6 +1351,162 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       toast.remove();
     }, 500);
+  }
+
+  // Auth DOM elements selection
+  const authModal = document.getElementById('auth-modal');
+  const authCloseBtn = document.getElementById('auth-close-btn');
+  const authToggleBtn = document.getElementById('auth-toggle-btn');
+  const authForm = document.getElementById('auth-form');
+  const authModalTitle = document.getElementById('auth-modal-title');
+  const authModalDesc = document.getElementById('auth-modal-desc');
+  const usernameFieldContainer = document.getElementById('username-field-container');
+  const authUsername = document.getElementById('auth-username');
+  const authEmailUsername = document.getElementById('auth-email-username');
+  const authPassword = document.getElementById('auth-password');
+  const authSubmitBtn = document.getElementById('auth-submit-btn');
+  const authNavContainer = document.getElementById('auth-nav-container');
+  const footerAuthContainer = document.getElementById('footer-auth-container');
+  const emailLabel = document.getElementById('email-label');
+
+  let isRegisterMode = false;
+  let userToken = localStorage.getItem('wanderlust_token') || null;
+  let username = localStorage.getItem('wanderlust_username') || null;
+
+  function updateAuthUI() {
+    if (userToken && username) {
+      const userRole = localStorage.getItem('wanderlust_role') || 'user';
+      let adminLink = '';
+      if (userRole === 'admin') {
+        adminLink = `<a href="admin.html" class="border border-gold/50 hover:bg-gold/10 text-gold px-4 py-1.5 rounded-full text-[10px] uppercase tracking-wider font-bold transition-all mr-2">Admin Panel</a>`;
+      }
+      if (authNavContainer) {
+        authNavContainer.innerHTML = `
+          <div class="flex items-center gap-3">
+            ${adminLink}
+            <span class="text-[10px] uppercase tracking-wider text-gold font-bold">Welcome, ${username}</span>
+            <button id="btn-header-logout" class="text-red-400 hover:text-red-500 text-[10px] uppercase font-bold tracking-wider transition-colors ml-2">Logout</button>
+          </div>
+        `;
+        const btnHeaderLogout = document.getElementById('btn-header-logout');
+        if (btnHeaderLogout) btnHeaderLogout.addEventListener('click', handleLogout);
+      }
+      if (footerAuthContainer) {
+        footerAuthContainer.innerHTML = `
+          <button id="btn-footer-logout" class="text-red-400 hover:text-red-500 font-bold uppercase tracking-widest transition-colors">Logout</button>
+        `;
+        const btnFooterLogout = document.getElementById('btn-footer-logout');
+        if (btnFooterLogout) btnFooterLogout.addEventListener('click', handleLogout);
+      }
+    } else {
+      if (authNavContainer) {
+        authNavContainer.innerHTML = `
+          <button id="btn-login-trigger" class="border border-gold/30 hover:border-gold text-gold px-5 py-2 rounded-full text-[10px] uppercase tracking-wider font-bold transition-all bg-emerald/20">Login</button>
+        `;
+        const btnLoginTrigger = document.getElementById('btn-login-trigger');
+        if (btnLoginTrigger) btnLoginTrigger.addEventListener('click', openAuthModal);
+      }
+      if (footerAuthContainer) {
+        footerAuthContainer.innerHTML = `
+          <button id="btn-footer-login" class="hover:text-gold transition-colors font-bold uppercase tracking-widest">Login</button>
+        `;
+        const btnFooterLogin = document.getElementById('btn-footer-login');
+        if (btnFooterLogin) btnFooterLogin.addEventListener('click', openAuthModal);
+      }
+    }
+  }
+
+  function openAuthModal() {
+    if (authModal) authModal.classList.remove('hidden');
+  }
+
+  function closeAuthModal() {
+    if (authModal) authModal.classList.add('hidden');
+  }
+
+  function toggleAuthMode() {
+    isRegisterMode = !isRegisterMode;
+    if (isRegisterMode) {
+      authModalTitle.textContent = "Register New Account";
+      authModalDesc.textContent = "Create a new profile to plan and track your journeys.";
+      usernameFieldContainer.classList.remove('hidden');
+      authUsername.setAttribute('required', 'true');
+      emailLabel.textContent = "Email Address";
+      authEmailUsername.placeholder = "Enter your email";
+      authSubmitBtn.textContent = "Register";
+      authToggleBtn.textContent = "Already have an account? Login";
+    } else {
+      authModalTitle.textContent = "Login to Wanderlust";
+      authModalDesc.textContent = "Enter your credentials to plan and save your trips.";
+      usernameFieldContainer.classList.add('hidden');
+      authUsername.removeAttribute('required');
+      emailLabel.textContent = "Username or Email";
+      authEmailUsername.placeholder = "username or email";
+      authSubmitBtn.textContent = "Login";
+      authToggleBtn.textContent = "Don't have an account? Register";
+    }
+  }
+
+  function handleAuthSubmit(e) {
+    e.preventDefault();
+    const uVal = authUsername.value.trim();
+    const emailUserVal = authEmailUsername.value.trim();
+    const passVal = authPassword.value;
+
+    if (isRegisterMode) {
+      showToast("Registering account...", "info");
+      fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: uVal, email: emailUserVal, password: passVal })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            showToast("Registration successful! Logging in...", "success");
+            isRegisterMode = true;
+            toggleAuthMode(); // switch back to login mode
+            authEmailUsername.value = uVal;
+            authPassword.value = passVal;
+          } else {
+            showToast(data.error || "Registration failed.", "error");
+          }
+        })
+        .catch(err => showToast("Connection failed.", "error"));
+    } else {
+      showToast("Authenticating...", "info");
+      fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usernameOrEmail: emailUserVal, password: passVal })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            userToken = data.token;
+            username = data.user.username;
+            localStorage.setItem('wanderlust_token', userToken);
+            localStorage.setItem('wanderlust_username', username);
+            localStorage.setItem('wanderlust_role', data.user.role || 'user');
+            showToast(`Welcome back, ${username}!`, "success");
+            closeAuthModal();
+            updateAuthUI();
+          } else {
+            showToast(data.error || "Invalid credentials.", "error");
+          }
+        })
+        .catch(err => showToast("Connection failed.", "error"));
+    }
+  }
+
+  function handleLogout() {
+    userToken = null;
+    username = null;
+    localStorage.removeItem('wanderlust_token');
+    localStorage.removeItem('wanderlust_username');
+    localStorage.removeItem('wanderlust_role');
+    showToast("Logged out successfully.", "info");
+    updateAuthUI();
   }
 
   async function fetchDestinations() {
